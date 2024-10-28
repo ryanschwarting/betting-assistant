@@ -52,8 +52,7 @@ export function NBABettingAssistant() {
           className="w-full"
         />
         <Button type="submit" disabled={isLoading} className="w-full">
-          {isLoading ? "Loading..." : "Get Betting Info"} // Change button text
-          based on loading state
+          {isLoading ? "Loading..." : "Get Betting Info"}
         </Button>
       </form>
       {result && ( // Conditionally render the result section
