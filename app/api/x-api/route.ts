@@ -91,7 +91,7 @@ Provide only factual, data-driven analysis from the provided context.`,
         },
         { role: "user", content: query },
       ],
-      temperature: 0.1, // Very low for factual responses
+      temperature: 0, // Very low for factual responses
     });
 
     return NextResponse.json({
