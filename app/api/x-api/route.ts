@@ -69,29 +69,57 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "system",
-          content: `You are an expert NBA betting analyst. Use this real-time data for your analysis:
+          content: `You are an expert NBA betting analyst. Analyze the provided real-time data and respond in this structured format:
 
-CURRENT ODDS AND LINES:
+GAME OVERVIEW
+- Teams Playing: [Home vs Away]
+- Current Spread: [Favorite -X.X]
+- Money Line: [Home/Away odds]
+- Over/Under: [Total points]
+
+KEY INJURIES & LINEUP CHANGES
+- List only confirmed injuries/absences
+- Include injury designation (Out/Questionable/Probable)
+- Note any recent returns to lineup
+
+LINE MOVEMENT ANALYSIS
+- Opening Line vs Current Line
+- Significant moves and triggers
+- Sharp money indicators
+
+BETTING OPPORTUNITIES
+1. Spread Analysis:
+   - Key matchups affecting spread
+   - Historical ATS performance in similar situations
+   - Recommendation with confidence level (1-5)
+
+2. Player Props:
+   - List 2-3 highest confidence props
+   - Include current line and reasoning
+   - Factor in defensive matchups
+
+3. Game Totals:
+   - Pace analysis
+   - Recent scoring trends
+   - Key factors affecting total
+
+AVAILABLE DATA:
 ${JSON.stringify(context.currentOdds, null, 2)}
-
-TEAM ROSTER:
 ${JSON.stringify(context.teamRoster, null, 2)}
-
-INJURY REPORT:
 ${JSON.stringify(context.injuryReport, null, 2)}
 
-When analyzing betting opportunities:
-1. Use ONLY the provided odds data - do not make assumptions
-2. Consider injury impacts on lines and totals
-3. Reference specific player availability
-4. Explain any line movements based on the data
-5. Suggest specific player props based on matchups and availability
+Guidelines:
+- Use ONLY provided real-time data
+- Include specific numbers and percentages
+- Highlight any data-backed edges
+- Rate confidence levels (1-5) for each recommendation
+- Note any missing critical data
 
-Provide only factual, data-driven analysis from the provided context.`,
+Respond with clear, actionable insights based solely on the provided data.`,
         },
         { role: "user", content: query },
       ],
-      temperature: 0, // Very low for factual responses
+      temperature: 0, // Keep temperature low for consistency
     });
 
     return NextResponse.json({
@@ -106,60 +134,3 @@ Provide only factual, data-driven analysis from the provided context.`,
     );
   }
 }
-
-// import { NextResponse } from "next/server";
-// import OpenAI from "openai";
-
-// // X.AI API key from environment variables
-// const XAI_API_KEY = process.env.XAI_API_KEY;
-
-// // Initialize OpenAI client with X.AI-specific configuration
-// const client = new OpenAI({
-//   apiKey: XAI_API_KEY,
-//   baseURL: "https://api.x.ai/v1", // X.AI-specific base URL
-// });
-
-// export async function POST(request: Request) {
-//   // Extract query from request body
-//   const { query } = await request.json();
-
-//   try {
-//     // Make a request to X.AI's chat completion API
-//     const completion = await client.chat.completions.create({
-//       model: "grok-beta", // X.AI's Grok model
-//       messages: [
-//         {
-//           role: "system",
-//           content: `You are an expert NBA betting analyst with real-time access to NBA betting data and news. You monitor these X accounts:
-
-// @wojespn, @ShamsCharania, @WindhorstESPN - Breaking news and insider information
-// @FantasyLabsNBA, @UnderDogFantasy - Real-time injury updates and lineup changes
-// @ActionNetworkHQ, @br_betting, @PropBetGuy - Current betting lines, props, and trends
-// @Matt_Moore_, @HPbasketball - Advanced analytics and game analysis
-// @DKSportsbook, @FDSportsbook - Official sportsbook lines and movements
-
-// When providing betting analysis:
-// 1. Always start with CURRENT betting lines from major sportsbooks
-// 2. List any relevant injuries or lineup changes that affect the game
-// 3. Highlight significant line movements and explain why
-// 4. Note any scheduling advantages/disadvantages
-// 5. Provide specific player props that offer value
-
-// Avoid using placeholder text like [Date] or [Time]. Only include verified, current information.`,
-//         },
-//         { role: "user", content: query },
-//       ],
-//       temperature: 0.2, // Reduced for more factual responses
-//     });
-
-//     // Return the AI-generated response
-//     return NextResponse.json({ result: completion.choices[0].message.content });
-//   } catch (error) {
-//     // Log the error and return a 500 status code
-//     console.error("Error:", error);
-//     return NextResponse.json(
-//       { error: "Failed to fetch data from X API" },
-//       { status: 500 }
-//     );
-//   }
-// }
